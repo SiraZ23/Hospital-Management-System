@@ -1,5 +1,6 @@
 ﻿using Hospital_Management_System.API.Data;
 using Hospital_Management_System.API.Models.Domain;
+using Microsoft.EntityFrameworkCore;
 
 namespace Hospital_Management_System.API.Repositories
 {
@@ -19,24 +20,42 @@ namespace Hospital_Management_System.API.Repositories
             return doctor;
         }
 
-        public Task<Doctor?> DeleteAsync(Guid id)
+        public async Task<Doctor?> DeleteAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var existingDoctor=await dbContext.doctors.FirstOrDefaultAsync(x => x.Id == id);
+            if (existingDoctor==null)
+            {
+                return null;
+            }
+            dbContext.doctors.Remove(existingDoctor);
+            await dbContext.SaveChangesAsync();
+            return existingDoctor;
         }
 
-        public Task<List<Doctor>> GetAllAsync()
+        public async Task<List<Doctor>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await dbContext.doctors.ToListAsync();
         }
 
-        public Task<Doctor?> GetByIdAsync(Guid id)
+        public async Task<Doctor?> GetByIdAsync(Guid id)
         {
-            throw new NotImplementedException();
+            return await dbContext.doctors.FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public Task<Doctor?> UpdateAsync(Guid id, Doctor doctor)
+        public async Task<Doctor?> UpdateAsync(Guid id, Doctor doctor)
         {
-            throw new NotImplementedException();
+            var existingDoctor=await dbContext.doctors.FirstOrDefaultAsync(x=>x.Id == id);
+            if(existingDoctor == null)
+            {
+                return null;
+            }
+            existingDoctor.Name=doctor.Name;
+            existingDoctor.Address=doctor.Address;
+            existingDoctor.PhoneNumber=doctor.PhoneNumber;
+            existingDoctor.SpecializationId=doctor.SpecializationId;
+            existingDoctor.DOB=doctor.DOB;
+            await dbContext.SaveChangesAsync();
+            return existingDoctor;
         }
     }
 }

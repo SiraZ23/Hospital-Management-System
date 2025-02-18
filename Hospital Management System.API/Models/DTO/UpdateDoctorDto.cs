@@ -6,6 +6,6 @@
         public string PhoneNumber { get; set; }
         public DateOnly DOB { get; set; }
         public string Address { get; set; }
-        public Guid Specialization_Id { get; set; }
+        public Guid SpecializationId { get; set; }
     }
 }

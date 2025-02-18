@@ -32,5 +32,49 @@ namespace Hospital_Management_System.API.Controllers
             //Map Domain Model To DTO
             return Ok(mapper.Map<Patient>(patientDomainModel));
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllAsync()
+        {
+            var patientDomainModel = await patientRepository.GetAllAsync();
+            return Ok(mapper.Map <List<PatientDto>>(patientDomainModel));
+        }
+
+        [HttpGet]
+        [Route("{id:Guid}")]
+        public async Task<IActionResult> GetByIdAsync([FromRoute] Guid id)
+        {
+            var patientDomainModel=await patientRepository.GetByIdAsync(id);
+            if (patientDomainModel == null)
+            {
+                return NotFound();
+            }
+            return Ok(mapper.Map<PatientDto>(patientDomainModel));
+        }
+
+        [HttpPut]
+        [Route("{id:Guid}")]
+        public async Task<IActionResult> UpdateAsync([FromRoute]Guid id, UpdatePatientDto updatePatientDto)
+        {
+            var patientDomainModel=mapper.Map<Patient>(updatePatientDto);
+            patientDomainModel=await patientRepository.UpdateAsync(id,patientDomainModel);
+            if (patientDomainModel == null)
+            {
+                return NotFound();
+            }
+            return Ok(mapper.Map<PatientDto>(patientDomainModel));
+        }
+
+        [HttpDelete]
+        [Route("{id:Guid}")]
+        public async Task<IActionResult> DeleteAsync([FromRoute] Guid id)
+        {
+            var deletedPatientDomainModel=await patientRepository.DeleteAsync(id);
+            if (deletedPatientDomainModel == null)
+            {
+                return NotFound();
+            }
+            return Ok(mapper.Map<PatientDto>(deletedPatientDomainModel));
+        }
     }
 }

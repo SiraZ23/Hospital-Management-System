@@ -1,5 +1,7 @@
 ﻿using Hospital_Management_System.API.Data;
 using Hospital_Management_System.API.Models.Domain;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.EntityFrameworkCore;
 
 namespace Hospital_Management_System.API.Repositories
 {
@@ -19,24 +21,42 @@ namespace Hospital_Management_System.API.Repositories
             return patient;
         }
 
-        public Task<Patient?> DeleteAsync(Guid id)
+        public async Task<Patient?> DeleteAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var existingPatient=await dbContext.patients.FirstOrDefaultAsync(x=>x.Id==id);
+            if (existingPatient==null)
+            {
+                return null;
+            }
+            dbContext.patients.Remove(existingPatient);
+            await dbContext.SaveChangesAsync();
+            return existingPatient;
         }
 
-        public Task<List<Patient>> GetAllAsync()
+        public async Task<List<Patient>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await dbContext.patients.ToListAsync();
         }
 
-        public Task<Patient?> GetByIdAsync(Guid id)
+        public async Task<Patient?> GetByIdAsync(Guid id)
         {
-            throw new NotImplementedException();
+            return await dbContext.patients.FirstOrDefaultAsync(x=>x.Id == id);
         }
 
-        public Task<Patient?> UpdateAsync(Guid id, Patient patient)
+        public async Task<Patient?> UpdateAsync(Guid id, Patient patient)
         {
-            throw new NotImplementedException();
+            var existingPatient=await dbContext.patients.FirstOrDefaultAsync(x=>x.Id==id);
+            if (existingPatient==null)
+            {
+                return null;
+            }
+            existingPatient.Name = patient.Name;
+            existingPatient.PhoneNumber = patient.PhoneNumber;
+            existingPatient.DoctorId = patient.DoctorId;
+            existingPatient.Address = patient.Address;
+            existingPatient.DOB = patient.DOB;
+            await dbContext.SaveChangesAsync();
+            return existingPatient;
         }
     }
 }
