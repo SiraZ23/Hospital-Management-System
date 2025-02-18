@@ -1,9 +1,6 @@
-﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace Hospital_Management_System.API.Models.Domain
+﻿namespace Hospital_Management_System.API.Models.DTO
 {
-    public class Doctor
+    public class DoctorDto
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
@@ -11,8 +8,5 @@ namespace Hospital_Management_System.API.Models.Domain
         public DateOnly DOB { get; set; }
         public string Address { get; set; }
         public Guid SpecializationId { get; set; }
-
-        //Navigation Property
-        public Specialization Specialization { get; set; }
     }
 }

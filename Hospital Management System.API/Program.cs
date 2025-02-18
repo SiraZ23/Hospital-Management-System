@@ -1,4 +1,6 @@
 using Hospital_Management_System.API.Data;
+using Hospital_Management_System.API.Mappings;
+using Hospital_Management_System.API.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,7 +14,14 @@ builder.Services.AddSwaggerGen();
 
 //Db Context Injection
 builder.Services.AddDbContext<HospitalManagementDbContext>(options =>
-options.UseSqlServer(builder.Configuration.GetConnectionString("HospitalManagementDb")));
+options.UseSqlServer(builder.Configuration.GetConnectionString("HospitalManagement")));
+
+//Repository Injection
+builder.Services.AddScoped<IPatientRepository,SQLPatientRepositorycs>();
+builder.Services.AddScoped<IDoctorRepository, SQLDoctorRepository>();
+
+//AutoMapper Injection
+builder.Services.AddAutoMapper(typeof(AutoMapperProfiles));
 
 var app = builder.Build();
 
